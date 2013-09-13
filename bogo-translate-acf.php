@@ -59,8 +59,6 @@ class Bogo_Acf {
 
             $original_post_field = get_field_object( $field['key'], $args['original_post'], array( 'load_value' => true, 'format_value' => false ));
 
-            // TODO: Get all the subfields is there are any present (Note: nested sub-fields)
-
             switch( $original_post_field['type'] ) {
                 case 'repeater':
                     $original_post_field['value'] = acf_field_repeater::format_value( $original_post_field['value'], $args['original_post'], $original_post_field );

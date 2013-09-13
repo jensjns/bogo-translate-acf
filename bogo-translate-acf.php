@@ -60,13 +60,18 @@ class Bogo_Acf {
             $original_post_field = get_field_object( $field['key'], $args['original_post'], array( 'load_value' => true, 'format_value' => false ));
 
             // TODO: Get all the subfields is there are any present (Note: nested sub-fields)
-            /*if( $original_post_field['type'] == 'repeater' || $original_post_field['type'] == 'flexible_content' ) {
-                while( has_sub_field( $original_post_field['name'], $args['original_post'] ) ) {
-                    $original_post_field['sub_fields'] = $GLOBALS['acf_field'];
-                }
-            }*/
 
-            //$value = get_field( , false);
+            switch( $original_post_field['type'] ) {
+                case 'repeater':
+                    $original_post_field['value'] = acf_field_repeater::format_value( $original_post_field['value'], $args['original_post'], $original_post_field );
+                    break;
+                case 'flexible_content':
+                    $original_post_field['value'] = acf_flexible_content::format_value( $original_post_field['value'], $args['original_post'], $original_post_field );                                    
+                    break;
+                default:
+                    break;
+            }
+
             $this->bogo_acf_getting_field = false;
         }
         $field = array_merge($field, $original_post_field);

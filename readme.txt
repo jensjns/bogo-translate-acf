@@ -1,4 +1,4 @@
-=== Bogo <3 ACF ===
+=== Bogo translate ACF ===
 Contributors: jensnilsson
 Tags: custom fields, translation
 Requires at least: 3.0.1

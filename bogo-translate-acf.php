@@ -1,6 +1,6 @@
 <?php
 /*
-    Plugin Name: Bogo <3 ACF
+    Plugin Name: Bogo translate ACF
     Description: This plugins works like a bridge between Bogo and Advanced Custom Fields to allow for translation of your Advanced Custom Fields with Bogo.
     Plugin URI: http://jensnilsson.nu
     Author: Jens Nilsson

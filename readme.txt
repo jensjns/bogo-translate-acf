@@ -11,7 +11,7 @@ This plugins works like a bridge between Bogo and Advanced Custom Fields to allo
 
 == Description ==
 
-This plugins works like a bridge between Bogo and Advanced Custom Fields to allow for translation of your Advanced Custom Fields with Bogo.
+This plugins works like a bridge between Bogo and Advanced Custom Fields to allow for translation of your Advanced Custom Fields with Bogo. Supports both Repeater and Flexible Content field-addons.
 
 == Installation ==
 
@@ -22,10 +22,16 @@ This plugins works like a bridge between Bogo and Advanced Custom Fields to allo
 
 == Changelog ==
 
+= 1.0 =
+* Fixed Flexible Content support.
+
 = 0.1 =
 * Inital release.
 
 == Upgrade Notice ==
+
+= 1.0 =
+Fixed Flexible Content field class-reference type (Flexible content is now translateable)
 
 = 0.1 =
 Initial Release.

@@ -7,7 +7,7 @@
     Author URI: http://jensnilsson.nu
     Text Domain: bogo-acf
     Domain Path: /languages/
-    Version: 0.1
+    Version: 1.0
 */
 
 
@@ -22,8 +22,8 @@ class Bogo_Acf {
     {
         add_action( 'plugins_loaded', array( $this, 'bogo_acf_plugins_loaded' ) );
         add_action( 'admin_enqueue_scripts', array( $this, 'bogo_acf_select_default_template' ) );
-        add_filter( 'acf/load_field', array( $this, 'bogo_acf_load_original_post_values') );
-
+        add_filter( 'acf/load_field', array( $this, 'bogo_acf_load_original_post_values' ) );
+        add_filter( 'page_attributes_dropdown_pages_args', array( $this, 'bogo_acf_select_parent_page' ), 10, 2 );
     }
 
     /**
@@ -49,9 +49,49 @@ class Bogo_Acf {
         }
     }
 
+    /**
+     * Resolves which parent this translation should have and pre-selects it in the parent dropdown
+     */
+    function bogo_acf_select_parent_page( $dropdown_args, $post ) {
+
+        // check if this is a page where we should be doing stuff
+        if( array_key_exists('locale', $_REQUEST) && array_key_exists('original_post', $_REQUEST) ) {
+
+            $original_post = get_post( $_REQUEST['original_post'] );
+
+            // check if the original post has a parent
+            if( $original_post->post_parent != 0 ) {
+
+                // get posts that is a translation to the current locale of the original posts parent
+                $args = array(
+                    'meta_query'    => array(
+                        array(
+                            'key' => '_locale',
+                            'value' => $_REQUEST['locale']
+                        ),
+                        array(
+                            'key' => '_original_post',
+                            'value' => $original_post->post_parent
+                        )
+                    )
+                );
+
+                $siblings_parents_sibling = query_posts( $args );
+
+                // check if we got a post
+                if( count( $siblings_parents_sibling ) == 1 ) {
+                    // pre-select in the parent-dropdown
+                    $dropdown_args['selected'] = $siblings_parents_sibling[0]->ID;
+                }
+            }
+        }
+
+        return $dropdown_args;
+    }
+
     function bogo_acf_load_original_post_values( $field ) {
 
-        $args = wp_parse_args( $_SERVER['HTTP_REFERER'] );
+        $args = ( array_key_exists( 'HTTP_REFERER', $_SERVER ) ) ? wp_parse_args( $_SERVER['HTTP_REFERER'] ) : array();
         $original_post_field = array();
 
         if( array_key_exists('locale', $args) && array_key_exists('original_post', $args) && !$this->bogo_acf_getting_field ) {
@@ -64,7 +104,7 @@ class Bogo_Acf {
                     $original_post_field['value'] = acf_field_repeater::format_value( $original_post_field['value'], $args['original_post'], $original_post_field );
                     break;
                 case 'flexible_content':
-                    $original_post_field['value'] = acf_flexible_content::format_value( $original_post_field['value'], $args['original_post'], $original_post_field );                                    
+                    $original_post_field['value'] = acf_field_flexible_content::format_value( $original_post_field['value'], $args['original_post'], $original_post_field );                                    
                     break;
                 default:
                     break;
